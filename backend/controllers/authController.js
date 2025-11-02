@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 
 const generateToken = (user) => {
-  return jwt.sign({ username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+  return jwt.sign({ id: user._id, username: user.username || user.name }, JWT_SECRET, { expiresIn: '1h' });
 };
 
 const registerUser = async (req, res) => {
@@ -20,7 +20,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    const user = await User.create({ name, email, password });
+  const user = await User.create({ name, email, password });
     const token = generateToken(user);
 
     res.status(201).json({
@@ -50,7 +50,7 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = generateToken(user);
+  const token = generateToken(user);
     res.status(200).json({
       userId: user._id,
       name: user.name,
