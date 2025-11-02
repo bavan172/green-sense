@@ -1,0 +1,33 @@
+<section class="hero-section">
+    <div class="hero-content">
+      <h1>Empower Your Eco Journey with Green Pulse</h1>
+      <p>Track your environmental impact, set sustainable goals, and commit to a greener future.</p>
+      <div class="cta-buttons">
+        <button  class="btn" (click)="openSignupForm()" mat-raised-button color="primary">Get Started</button>
+        <button class="btn" (click)="scrollToSection(featuresSection)" mat-stroked-button color="accent">Learn More</button>
+      </div>
+    </div>
+  </section>
+  
+  <section class="features-section" #featuresSection>
+    <div class="feature" *ngFor="let feature of features">
+      <mat-icon>{{ feature.icon }}</mat-icon>
+      <h3>{{ feature.title }}</h3>
+      <p>{{ feature.description }}</p>
+    </div>
+  </section>
+  
+  <section class="testimonials-section">
+    <h2>What Our Users Say</h2>
+    <div class="testimonial" *ngFor="let testimonial of testimonials">
+      <p>"{{ testimonial.quote }}"</p>
+      <span>- {{ testimonial.author }}</span>
+    </div>
+  </section>
+  
+  <section class="cta-section">
+    <h2>Ready to Make a Difference?</h2>
+    <p>Join Green Pulse today and be part of the change.</p>
+    <button class="btn btn-outline-primary" (click)="openSignupForm()" mat-raised-button>Sign Up Now</button>
+  </section>
+  

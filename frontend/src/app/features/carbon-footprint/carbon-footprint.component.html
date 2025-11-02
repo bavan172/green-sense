@@ -1,0 +1,27 @@
+<div class="carbon-calculator">
+    <h2>Carbon Footprint Calculator</h2>
+    <form (submit)="calculateFootprint($event)">
+      <label>
+        Daily Car Travel (km):
+        <input type="number" [(ngModel)]="carKm" name="carKm" required />
+      </label>
+  
+      <label>
+        Daily Electricity Usage (kWh):
+        <input type="number" [(ngModel)]="electricityKwh" name="electricityKwh" required />
+      </label>
+  
+      <label>
+        Daily Natural Gas Usage (therms):
+        <input type="number" [(ngModel)]="gasTherms" name="gasTherms" required />
+      </label>
+  
+      <button type="submit">Calculate</button>
+    </form>
+  
+    <div *ngIf="totalEmissions !== null" class="result">
+      <p>Your estimated daily carbon footprint is:</p>
+      <h3>{{ totalEmissions }} kg CO₂</h3>
+    </div>
+  </div>
+  

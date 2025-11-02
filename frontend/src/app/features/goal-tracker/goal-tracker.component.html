@@ -1,0 +1,261 @@
+<div class="sustainability-goals-container">
+    <header class="page-header">
+      <h1>My Sustainability Goals</h1>
+      <button class="btn btn-primary add-goal-btn" (click)="openGoalModal()">
+        <i class="material-icons">add</i> New Goal
+      </button>
+    </header>
+  
+    <div class="goal-summary-section">
+      <div class="summary-card">
+        <div class="summary-icon completed">
+          <i class="material-icons">done_all</i>
+        </div>
+        <div class="summary-content">
+          <h3>{{ completedGoals.length }}</h3>
+          <p>Completed</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon in-progress">
+          <i class="material-icons">trending_up</i>
+        </div>
+        <div class="summary-content">
+          <h3>{{ inProgressGoals.length }}</h3>
+          <p>In Progress</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon upcoming">
+          <i class="material-icons">event</i>
+        </div>
+        <div class="summary-content">
+          <h3>{{ upcomingGoals.length }}</h3>
+          <p>Upcoming</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon impact">
+          <i class="material-icons">eco</i>
+        </div>
+        <div class="summary-content">
+          <h3>{{ calculateTotalImpact() | number:'1.0-0' }}</h3>
+          <p>Impact Points</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="goals-filter-container">
+      <div class="search-bar">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Search goals..." 
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()">
+        <i class="material-icons search-icon">search</i>
+      </div>
+  
+      <div class="filter-buttons">
+        <div class="status-filter">
+          <span>Status:</span>
+          <div class="btn-group">
+            <button 
+              *ngFor="let status of statusOptions" 
+              class="btn" 
+              [ngClass]="{
+                'btn-primary': selectedStatus === status,
+                'btn-outline-primary': selectedStatus !== status,
+                'active-status': selectedStatus === status
+              }"
+              (click)="onStatusChange(status)">
+              {{ status }}
+            </button>
+          </div>
+        </div>
+  
+        <div class="category-filter">
+          <span>Category:</span>
+          <select class="form-control" [(ngModel)]="selectedCategory" (change)="applyFilters()">
+            <option value="all">All Categories</option>
+            <option *ngFor="let category of impactCategories" [value]="category">{{ category }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  
+    <div class="goals-content" *ngIf="!isLoading; else loadingTemplate">
+      <div class="goals-list" *ngIf="filteredGoals.length > 0; else noGoalsTemplate">
+        <div class="goal-item" *ngFor="let goal of filteredGoals" [class]="getGoalStatusClass(goal)">
+          <div class="goal-header">
+            <div class="goal-category">
+              <span>{{ goal.category }}</span>
+            </div>
+            <div class="goal-actions">
+              <button class="btn btn-icon" (click)="editGoal(goal)">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="btn btn-icon" (click)="deleteGoal(goal._id)">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </div>
+  
+          <h3 class="goal-title">{{ goal.title }}</h3>
+          <p class="goal-description">{{ goal.description }}</p>
+  
+          <div class="goal-progress">
+            <div class="progress-label">
+              <span>Progress: {{ goal.progress }}%</span>
+              <span class="deadline" [class.deadline-near]="!isDeadlineNear(goal.deadline)">
+                <i class="material-icons">event</i> {{ goal.deadline | date }}
+              </span>
+            </div>
+<div class="progress-bar">
+  <div 
+    class="progress-fill" 
+    [style.width.%]="calculateProgress(goal)"
+    [ngClass]="{
+      'progress-low': calculateProgress(goal) <= 33,
+      'progress-medium': calculateProgress(goal) > 33 && calculateProgress(goal) <= 66,
+      'progress-high': calculateProgress(goal) > 66
+    }">
+  </div>
+</div>
+          </div>
+  
+          <div class="goal-milestones" *ngIf="goal.milestones && goal.milestones.length > 0">
+            <h4 class="milestones-title" (click)="toggleMilestones(goal)">
+              Milestones 
+              <i class="material-icons">{{ goal.showMilestones ? 'expand_less' : 'expand_more' }}</i>
+            </h4>
+            <div class="milestones-list" *ngIf="goal.showMilestones">
+              <div class="milestone-item" *ngFor="let milestone of goal.milestones">
+                <div class="milestone-checkbox">
+                  <input 
+                    type="checkbox" 
+                    [id]="'milestone-' + milestone._id" 
+                    [checked]="milestone.completed"
+                    (change)="toggleMilestone(goal, milestone._id, milestone.completed)">
+                  <label [for]="'milestone-' + milestone._id">{{ milestone.description }}</label>
+                </div>
+                <div class="milestone-date">{{ milestone.targetDate | date }}</div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="goal-footer">
+            <div class="goal-impact">
+              <i class="material-icons">eco</i>
+              <span>Impact: {{ goal.impactPoints }} points</span>
+            </div>
+            <button 
+              class="btn"
+              [class.btn-success]="goal.status !== 'completed'"
+              [class.btn-outline-primary]="goal.status === 'completed'"
+              [disabled]="goal.status === 'completed'"
+              >
+              {{ goal.status === 'completed' ? 'Completed' : 'Update Progress' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <ng-template #noGoalsTemplate>
+      <div class="no-goals">
+        <div class="empty-state">
+          <i class="material-icons">eco</i>
+          <h3>No goals found</h3>
+          <p>
+            {{ getEmptyStateMessage() }}
+          </p>
+          <button class="btn btn-primary" (click)="openGoalModal()">Create Your First Goal</button>
+        </div>
+      </div>
+    </ng-template>
+  
+    <ng-template #loadingTemplate>
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading your sustainability goals...</p>
+      </div>
+    </ng-template>
+  
+    <div class="modal" *ngIf="showGoalModal" (click)="closeModal($event)">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>{{ editMode ? 'Edit Goal' : 'Create New Goal' }}</h2>
+          <button class="close-button" (click)="closeModal()">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="goalForm" (ngSubmit)="saveGoal()">
+            <div class="form-group">
+              <label for="title">Goal Title *</label>
+              <input type="text" id="title" class="form-control" formControlName="title" placeholder="What do you want to achieve?">
+              <div class="error-message" *ngIf="submitted && f['title'].errors">
+                Title is required
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea id="description" class="form-control" formControlName="description" placeholder="Describe your sustainability goal..."></textarea>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group half-width">
+                <label for="category">Category *</label>
+                <select id="category" class="form-control" formControlName="category">
+                  <option ngValue="null" disabled>Select a category</option>
+                  <option *ngFor="let category of impactCategories" [value]="category">{{ category }}</option>
+                </select>
+                <div class="error-message" *ngIf="submitted && f['category'].errors">
+                  Category is required
+                </div>
+              </div>
+  
+              <div class="form-group half-width">
+                <label for="deadline">Deadline *</label>
+                <input type="date" id="deadline" class="form-control" formControlName="deadline">
+                <div class="error-message" *ngIf="submitted && f['deadline'].errors">
+                  Deadline is required
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="impactPoints">Impact Points (1-100)</label>
+              <input type="number" id="impactPoints" class="form-control" formControlName="impactPoints" min="1" max="100">
+            </div>
+  
+            <div class="form-group">
+              <label>Milestones</label>
+              <div formArrayName="milestones">
+                <div *ngFor="let milestone of milestones.controls; let i = index" [formGroupName]="i">
+                  <div class="milestone-inputs">
+                    <input type="text" class="form-control" formControlName="description" placeholder="Milestone description">
+                    <input type="date" class="form-control" formControlName="targetDate" placeholder="Target date">
+                  </div>
+                  <button type="button" class="btn btn-icon remove-milestone" (click)="removeMilestone(i)">
+                    <i class="material-icons">remove_circle</i>
+                  </button>
+                </div>
+                <button type="button" class="btn btn-outline-primary add-milestone" (click)="addMilestone()">
+                  <i class="material-icons">add</i> Add Milestone
+                </button>
+              </div>
+            </div>
+  
+            <div class="form-actions">
+              <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+              <button type="submit" class="btn btn-primary">{{ editMode ? 'Update Goal' : 'Create Goal' }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>

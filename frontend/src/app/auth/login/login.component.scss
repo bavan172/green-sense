@@ -1,0 +1,67 @@
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 5% auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .login-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333333;
+  }
+  
+  .login-container form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .login-container input[type="email"],
+  .login-container input[type="password"] {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .login-container input[type="email"]:focus,
+  .login-container input[type="password"]:focus {
+    border-color: #007b5e;
+    outline: none;
+  }
+  
+  .login-container button[type="submit"] {
+    padding: 0.75rem;
+    background-color: #007b5e;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-container button[type="submit"]:hover {
+    background-color: #005f47;
+  }
+  
+  .login-footer {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .login-footer a {
+    color: #007b5e;
+    text-decoration: none;
+  }
+  
+  .login-footer a:hover {
+    text-decoration: underline;
+  }
+  

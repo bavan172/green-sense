@@ -1,0 +1,63 @@
+<div class="dashboard-container" style="padding: 20px;">
+  <h2>🌱 ESG Metrics Overview</h2>
+
+  <div class="card-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div *ngFor="let metric of esgMetrics" class="card" style="flex: 1 1 30%; background: #e8f5e9; padding: 16px; border-radius: 12px;">
+      <h4>{{ metric.name }}</h4>
+      <p>Current: <strong>{{ metric.value }} {{ metric.unit }}</strong></p>
+      <p>Goal: <strong>{{ metric.goal }} {{ metric.unit }}</strong></p>
+    </div>
+  </div>
+
+  <div style="margin-top: 40px;">
+    <h3>📊 Trend Visualization</h3>
+    <canvas id="esgChart" width="400" height="200"></canvas>
+  </div>
+</div>
+
+<hr style="margin: 40px 0;">
+<h3>✏️ Update ESG Metric</h3>
+<button (click)="exportToCSV()" class="btn btn-outline-primary" style="margin-top: 20px;">
+    📁 Export ESG Metrics as CSV
+</button>
+<form style="max-width: 400px;">
+  <label for="metric">Select Metric:</label>
+  <select id="metric" class="form-control" [(ngModel)]="selectedMetricIndex" name="metric" (change)="onMetricChange()">
+    <option *ngFor="let metric of selectItems; let i = index" [value]="i">{{ metric }}</option>
+  </select>
+
+  <label for="value" style="margin-top: 10px;">New Value:</label>
+  <input type="number" class="form-control" [(ngModel)]="newValue" name="value" required>
+
+  <label for="goal" style="margin-top: 10px;">New Goal:</label>
+  <input type="number" class="form-control" [(ngModel)]="newGoal" name="goal" required>
+
+  <button class="btn btn-success" style="margin-top: 15px;" type="submit" (click)="updateMetric()">Update</button>
+  <div class="chat-bubble" (click)="toggleChat()">
+    💬 Chat
+  </div>
+  <div class="chat-window" *ngIf="showChat">
+    <div class="chat-header">
+      <h4>Chat with Gaia</h4>
+      <button class="close-btn" (click)="toggleChat()">✖</button>
+    </div>
+    <div class="chat-body">
+      <div *ngIf="gaiaIntro" class="chat-message intro-message">
+        <strong>Gaia:</strong> {{ gaiaIntro }}
+      </div>
+      <div *ngFor="let message of chatMessages" class="chat-message">
+        <strong>{{ message.sender }}:</strong> {{ message.message }}
+      </div>
+    </div>
+    <div class="chat-footer">
+      <input
+        type="text"
+        name="message"
+        [(ngModel)]="newMessage"
+        placeholder="Type your message..."
+        class="chat-input"
+      />
+      <button (click)="sendMessage()" class="send-btn">Send</button>
+    </div>
+  </div>
+</form>

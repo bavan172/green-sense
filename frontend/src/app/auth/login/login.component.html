@@ -1,0 +1,24 @@
+<div class="login-container">
+  <h2>Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+    <input type="email" formControlName="email" placeholder="Email" />
+    <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+      <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</small>
+      <small *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+    </div>
+
+    <input type="password" formControlName="password" placeholder="Password" />
+    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+      <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+      <small *ngIf="loginForm.get('password')?.errors?.['pattern']">
+        Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.
+      </small>
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+  </form>
+  <div class="login-footer">
+    <p>Don't have an account? <a (click)="openSignupForm()">Sign Up</a></p>
+    <p><a (click)="forgotPassword()">Forgot Password</a></p>
+  </div>
+</div>

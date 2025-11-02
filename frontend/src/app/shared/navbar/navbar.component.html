@@ -1,0 +1,23 @@
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <a routerLink="/">
+      <span>Green Pulse</span>
+    </a>
+  </div>
+  <ul class="sidebar-menu">
+    <li *ngFor="let item of navItems" class="sidebar-item">
+      <ng-container *ngIf="!item.isAction; else actionItem">
+        <a [routerLink]="item.path" routerLinkActive="active">
+          <i class="material-icons">{{ item.icon }}</i>
+          <span>{{ item.label }}</span>
+        </a>
+      </ng-container>
+      <ng-template #actionItem>
+        <a (click)="logout()" class="action-link">
+          <i class="material-icons">{{ item.icon }}</i>
+          <span>{{ item.label }}</span>
+        </a>
+      </ng-template>
+    </li>
+  </ul>
+</nav>

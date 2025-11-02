@@ -1,0 +1,7 @@
+<div class="app-container">
+  <app-navbar *ngIf="showNavbar"></app-navbar>
+  <main [ngClass]="{ 'main-content': !isLandingPage }">
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer *ngIf="!showNavbar"></app-footer>
+</div>

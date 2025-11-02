@@ -1,0 +1,35 @@
+<div class="register-container">
+    <h2>Sign Up</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+      <input type="text" placeholder="Full Name" formControlName="fullName" />
+      <div *ngIf="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched">
+        <small *ngIf="registerForm.get('fullName')?.errors?.['required']">Full Name is required.</small>
+      </div>
+  
+      <input type="email" placeholder="Email" formControlName="email" />
+      <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        <small *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</small>
+        <small *ngIf="registerForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+      </div>
+  
+      <input type="password" placeholder="Password" formControlName="password" />
+      <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        <small *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</small>
+        <small *ngIf="registerForm.get('password')?.errors?.['pattern']">
+          Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.
+        </small>
+      </div>
+  
+      <input type="password" placeholder="Confirm Password" formControlName="confirmPassword" />
+      <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+        <small *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirm Password is required.</small>
+        <small *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match.</small>
+      </div>
+  
+      <button type="submit" [disabled]="registerForm.invalid">Register</button>
+    </form>
+    <div class="register-footer">
+      <p>Already have an account? <a (click)="openLoginForm()">Log In</a></p>
+    </div>
+  </div>
+  
