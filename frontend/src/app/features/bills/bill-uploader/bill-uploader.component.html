@@ -1,0 +1,30 @@
+<div class="bill-uploader">
+  <h2>Upload Bill / Invoice</h2>
+  <input type="file" (change)="onFileChange($event)" accept="application/pdf" />
+  <button (click)="upload()" [disabled]="!file || extracting">Upload & Extract</button>
+  <div *ngIf="extracting">Extracting text...</div>
+
+  <div *ngIf="extractedText">
+    <h3>Extracted Text</h3>
+    <pre>{{ extractedText }}</pre>
+    <h4>Redacted Preview</h4>
+    <pre>{{ redacted }}</pre>
+    <div *ngIf="pii && pii.length">
+      <h5>Detected PII</h5>
+      <ul>
+        <li *ngFor="let p of pii">{{ p.type }} — {{ p.match }}</li>
+      </ul>
+      <label>
+        <input type="checkbox" [(ngModel)]="includePII" /> I consent to include detected PII in processing (optional)
+      </label>
+    </div>
+    <button (click)="process()" [disabled]="processing">Process & Generate Report</button>
+  </div>
+
+  <div *ngIf="processing">Processing through Gaia...</div>
+
+  <div *ngIf="reportUrl">
+    <h3>Report Ready</h3>
+    <button (click)="downloadReport()">Download Report PDF</button>
+  </div>
+</div>
