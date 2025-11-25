@@ -184,5 +184,3 @@ GEMINI_API_KEY=your_gemini_api_key
 ✅ *Green Sense turns your utility data into environmental intelligence — helping businesses and individuals make every kilowatt count toward a cleaner, smarter future.*
 
 ---
-
-Would you like me to add a **“Usage Example” section** (showing sample input → output JSON from Gemini and report screenshot placeholders)? That makes the README visually stronger for hackathons and GitHub demos.
